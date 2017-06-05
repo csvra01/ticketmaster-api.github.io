@@ -1051,6 +1051,7 @@ Via: 1.1 vegur
 
 {: .article #updated-events}
 ### Updated Events 
+[no longer supported, to be deprecated in v2]
 Find the events which have been updated since a given timestamp. First call the service with the updated_since timestamp, 
 then process the response and call the service again with parameters provided in the next field. Finally continue until 
 the returned number of rows is less than the requested number - or until the response is an empty array. 
