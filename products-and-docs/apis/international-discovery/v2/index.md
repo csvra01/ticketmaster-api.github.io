@@ -639,13 +639,13 @@ Get details for a specific event using the unique identifer for the event. This 
 availability and pricing, a description, and the Ticketmaster Website URL for purchasing tickets for the event.
 
 {: .code.red}
-https://app.ticketmaster.eu/mfxapi/v1/event/{event_id}
+https://app.ticketmaster.eu/mfxapi/v2/events/{event_id}
 
 | Parameters | Optional values | Type | Required |
 | ---------- | --------------- | ---- | -------- |
 |`event_id` | A unique identifier for the event which is specific to the domain (e.g. Norway) Example: 449621. | Integer | Yes|
 |`lang` | The language in ISO code format. Example: no-no. | string | No |
-|`domain_ids` | The unique identifier for the domain or market. Although optional, this is recommended. Example: norway. | string | Yes|
+|`domain` | The unique identifier for the domain or market. Although optional, this is recommended. Example: norway. | string | Yes|
 
 
 {: .aside}
@@ -668,7 +668,7 @@ https://app.ticketmaster.eu/mfxapi/v1/event/{event_id}
 {% highlight js %}
 var request = new XMLHttpRequest();
 
-request.open('GET', 'https://app.ticketmaster.eu/mfxapi/v1/event/449621?lang&domain_ids');
+request.open('GET', 'https://app.ticketmaster.eu/mfxapi/v2/events/449621?lang&domain');
 
 request.setRequestHeader('Accept', 'application/json');
 
@@ -686,7 +686,7 @@ request.send();
 {% highlight bash %}
 curl --include \
      --header "Accept: application/json" \
-  'https://app.ticketmaster.eu/mfxapi/v1/event/449621?lang&domain_ids'
+  'https://app.ticketmaster.eu/mfxapi/v2/events/449621?lang&domain'
 {% endhighlight %}
 
 {% highlight java %}
@@ -709,7 +709,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType;
 
 Client client = ClientBuilder.newClient();
-Response response = client.target("https://app.ticketmaster.eu/mfxapi/v1/event/{event_id}?lang&#38;domain_ids")
+Response response = client.target("https://app.ticketmaster.eu/mfxapi/v2/events/{event_id}?lang&#38;domain")
   .request(MediaType.TEXT_PLAIN_TYPE)
   .header("Accept", "application/json")
   .get();
@@ -725,7 +725,7 @@ var request = require('request');
 
 request({
   method: 'GET',
-  url: 'https://app.ticketmaster.eu/mfxapi/v1/event/449621?lang&domain_ids',
+  url: 'https://app.ticketmaster.eu/mfxapi/v2/events/449621?lang&domain',
   headers: {
     'Accept': 'application/json'
   }}, function (error, response, body) {
@@ -744,7 +744,7 @@ my $ua   = LWP::UserAgent->new;
 
 $ua->default_header("Accept" => "application/json");
 
-my $response = $ua->get("https://app.ticketmaster.eu/mfxapi/v1/event/449621?lang&domain_ids");
+my $response = $ua->get("https://app.ticketmaster.eu/mfxapi/v2/events/449621?lang&domain");
 
 print $response->as_string;
 {% endhighlight %}
@@ -756,7 +756,7 @@ from urllib2 import Request, urlopen
 headers = {
   'Accept': 'application/json'
 }
-request = Request('https://app.ticketmaster.eu/mfxapi/v1/event/449621?lang&domain_ids', headers=headers)
+request = Request('https://app.ticketmaster.eu/mfxapi/v2/events/449621?lang&domain', headers=headers)
 
 response_body = urlopen(request).read()
 print response_body
@@ -767,7 +767,7 @@ print response_body
 <?php
 $ch = curl_init();
 
-curl_setopt($ch, CURLOPT_URL, "https://app.ticketmaster.eu/mfxapi/v1/event/449621?lang&domain_ids");
+curl_setopt($ch, CURLOPT_URL, "https://app.ticketmaster.eu/mfxapi/v2/events/449621?lang&domain");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 curl_setopt($ch, CURLOPT_HEADER, FALSE);
 
@@ -790,7 +790,7 @@ headers = {
   :accept => 'application/json'
 }
 
-response = RestClient.get 'https://app.ticketmaster.eu/mfxapi/v1/event/449621?lang&domain_ids', headers
+response = RestClient.get 'https://app.ticketmaster.eu/mfxapi/v2/events/449621?lang&domain', headers
 puts response
 {% endhighlight %}
 
@@ -806,7 +806,7 @@ import (
 
 func main() {
 	client := &http.Client{}
-	req, _ := http.NewRequest("GET", "https://app.ticketmaster.eu/mfxapi/v1/event/449621?lang&domain_ids", nil)
+	req, _ := http.NewRequest("GET", "https://app.ticketmaster.eu/mfxapi/v2/events/449621?lang&domain", nil)
 	req.Header.Add("Accept", "application/json")
 	resp, err := client.Do(req)
 	if err != nil {
@@ -829,14 +829,14 @@ func main() {
 using System;
 using System.Net.Http;
 
-var baseAddress = new Uri("https://app.ticketmaster.eu/mfxapi/v1/");
+var baseAddress = new Uri("https://app.ticketmaster.eu/mfxapi/v2/");
 
 using (var httpClient = new HttpClient{ BaseAddress = baseAddress })
 {
 
   httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
   
-  using(var response = await httpClient.GetAsync("event/{event_id}?lang&domain_ids"))
+  using(var response = await httpClient.GetAsync("events/{event_id}?lang&domain"))
   { 
     string responseData = await response.Content.ReadAsStringAsync();
   }
@@ -845,7 +845,7 @@ using (var httpClient = new HttpClient{ BaseAddress = baseAddress })
 
 
 {% highlight vb %}
-Dim request = TryCast(System.Net.WebRequest.Create("https://app.ticketmaster.eu/mfxapi/v1/event/449621?lang&domain_ids"), System.Net.HttpWebRequest)
+Dim request = TryCast(System.Net.WebRequest.Create("https://app.ticketmaster.eu/mfxapi/v2/events/449621?lang&domain"), System.Net.HttpWebRequest)
 
 request.Method = "GET"
 
@@ -868,7 +868,7 @@ import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
 
 @Grab (group = 'org.codehaus.groovy.modules.http-builder', module = 'http-builder', version = '0.5.0')
-def client = new RESTClient("https://app.ticketmaster.eu/mfxapi/v1")
+def client = new RESTClient("https://app.ticketmaster.eu/mfxapi/v2")
 
 def emptyHeaders = [:]
 emptyHeaders."Accept" = "application/json"
@@ -885,7 +885,7 @@ if (response.data) {
 
 
 {% highlight objc %}
-NSURL *URL = [NSURL URLWithString:@"https://private-anon-ebc054a4b-ticketmasterdiscoveryapi.apiary-mock.com/mfxapi/v1/events?domain_ids&lang&attraction_ids&category_ids&subcategory_ids&event_ids&event_name&venue_ids&city_ids&country_ids&postal_code&lat&long&radius&eventdate_to&eventdate_from&onsaledate_to&onsaledate_from&offsaledate_to&offsaledate_from&min_price&max_price&price_excl_fees&is_seats_available&is_not_cancelled&&is_not_package&sort_by&order&rows&start&include_external_events"];
+NSURL *URL = [NSURL URLWithString:@"https://private-anon-ebc054a4b-ticketmasterdiscoveryapi.apiary-mock.com/mfxapi/v2/events?domain&lang&attraction_ids&category_ids&subcategory_ids&event_ids&event_name&venue_ids&city_ids&country_ids&postal_code&lat&long&radius&eventdate_to&eventdate_from&onsaledate_to&onsaledate_from&offsaledate_to&offsaledate_from&min_price&max_price&price_excl_fees&seats_available&cancelled&&is_not_package&sort_by&order&rows&start&include_external_events"];
 
 NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
 [request setHTTPMethod:@"GET"];
@@ -919,7 +919,7 @@ NSURLSessionDataTask *task = [session dataTaskWithRequest:request
 // import XCPlayground
 // XCPlaygroundPage.currentPage.needsIndefiniteExecution = true
 
-let url = NSURL(string: "https://app.ticketmaster.eu/mfxapi/v1/event/449621?lang&domain_ids")!
+let url = NSURL(string: "https://app.ticketmaster.eu/mfxapi/v2/events/449621?lang&domain")!
 let request = NSMutableURLRequest(URL: url)
 request.addValue("application/json", forHTTPHeaderField: "Accept")
 
@@ -943,7 +943,7 @@ task.resume()
 
 {% highlight HTTP %}
 GET /event/449621?lang&domain_ids HTTP/1.1
-Host: https://app.ticketmaster.eu/mfxapi/v1
+Host: https://app.ticketmaster.eu/mfxapi/v2
 Accept: application/json
 Content-Length: 0
 {% endhighlight %}
@@ -966,17 +966,17 @@ Via: 1.1 vegur
   "events": [
     {
       "id": "182671",
-      "domain_id": "unitedkingdom",
+      "domain": "unitedkingdom",
       "name": "R5",
       "url": "http://www.ticketweb.co.uk/checkout/event.php?eventId=IEH1310Y&language=en-us&track=DiscoveryAPI&camefrom=TMINTL-NO-IPROSPECT-9oX",
-      "externalUrl": false,
+      "external_url: false,
       "eventdate": {
         "format": "datetime",
         "value": "2015-10-13T19:00:00Z"
       },
       "day_of_week": "Tuesday",
       "timezone": "Europe/London",
-      "localeventdate": "2015-10-13T20:00:00",
+      "local_event_date": "2015-10-13T20:00:00",
       "onsale": {
         "format": "datetime",
         "value": "2015-06-12T09:00:00Z"
@@ -985,14 +985,14 @@ Via: 1.1 vegur
         "format": "datetime",
         "value": "2015-10-13T17:00:00Z"
       },
-      "dooropening": {
+      "door_opening_date": {
         "format": "datetime",
         "value": "2015-10-13T18:00:00Z"
       },
       "properties": {
         "cancelled": false,
         "rescheduled": false,
-        "seats_avail": true,
+        "seats_available": true,
         "sold_out": false,
         "package": false
       },
@@ -1048,543 +1048,6 @@ Via: 1.1 vegur
     "total": 1
   }
 }
-{% endhighlight %}
-
-{: .article #updated-events}
-### Updated Events 
-Find the events which have been updated since a given timestamp. First call the service with the updated_since timestamp, 
-then process the response and call the service again with parameters provided in the next field. Finally continue until 
-the returned number of rows is less than the requested number - or until the response is an empty array. 
-(This service does not consider what fields are updated or changes to values, only when the event data was written)
-
-{: .code.red}
-https://app.ticketmaster.eu/mfxapi/v1/event/updated
-
-| Parameters | Optional values | Type | Required |
-| ---------- | --------------- | ---- | -------- |
-|`updated_since` | The timestamp for the date and time from which updated events are returned. Time is always UTC and should be specified to hour, minutes, seconds and milliseconds. Example: 2008-01-18T18:51:43.01Z. | string | Yes|
-|`lang` | The language in ISO code format. Example: no-no. | string | No |
-|`domain_ids` | The unique identifier for the domain or market. Although optional, this is recommended. Example: norway. | string | No |
-|`rows` | The number of rows to return in the response. Example: 100. | Integer | No |
-
-{: .aside}
->[JavaScript](#js)
->[cURL](#curl)
->[Java](#java)
->[Node.js](#node)
->[Perl](#perl)
->[Python](#python)
->[PHP](#php)
->[Ruby](#ruby)
->[Go](#go)
->[C#](#c-sharp)
->[Visual Basic](#visual-basic)
->[Groovy](#groovy)
->[Objective-C](#objective-c)
->[Swift](#swift)
-{: .lang-selector}
-
-{% highlight js %}
-var request = new XMLHttpRequest();
-
-request.open('GET', 'https://app.ticketmaster.eu/mfxapi/v1/event/updated?updated_since&lang&domain_ids&rows');
-
-request.setRequestHeader('Accept', 'application/json');
-
-request.onreadystatechange = function () {
-  if (this.readyState === 4) {
-    console.log('Status:', this.status);
-    console.log('Headers:', this.getAllResponseHeaders());
-    console.log('Body:', this.responseText);
-  }
-};
-
-request.send();
-{% endhighlight %}
-
-{% highlight bash %}
-curl --include \
-     --header "Accept: application/json" \
-  'https://app.ticketmaster.eu/mfxapi/v1/event/updated?updated_since&lang&domain_ids&rows'
-{% endhighlight %}
-
-{% highlight java %}
-// Maven : Add these dependencies to your pom.xml (java6+)
-// <dependency>
-//     <groupId>org.glassfish.jersey.core</groupId>
-//     <artifactId>jersey-client</artifactId>
-//     <version>2.8</version>
-// </dependency>
-// <dependency>
-//     <groupId>org.glassfish.jersey.media</groupId>
-//     <artifactId>jersey-media-json-jackson</artifactId>
-//     <version>2.8</version>
-// </dependency>
-
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.MediaType;
-
-Client client = ClientBuilder.newClient();
-Response response = client.target("https://app.ticketmaster.eu/mfxapi/v1/event/updated?updated_since&#38;lang&#38;domain_ids&#38;rows")
-  .request(MediaType.TEXT_PLAIN_TYPE)
-  .header("Accept", "application/json")
-  .get();
-
-System.out.println("status: " + response.getStatus());
-System.out.println("headers: " + response.getHeaders());
-System.out.println("body:" + response.readEntity(String.class));
-{% endhighlight %}
-
-
-{% highlight js %}
-var request = require('request');
-
-request({
-  method: 'GET',
-  url: 'https://app.ticketmaster.eu/mfxapi/v1/event/updated?updated_since&lang&domain_ids&rows',
-  headers: {
-    'Accept': 'application/json'
-  }}, function (error, response, body) {
-  console.log('Status:', response.statusCode);
-  console.log('Headers:', JSON.stringify(response.headers));
-  console.log('Response:', body);
-});
-{% endhighlight %}
-
-
-{% highlight perl %}
-require LWP::UserAgent;
-
-my $ua   = LWP::UserAgent->new;
-
-$ua->default_header("Accept" => "application/json");
-
-my $response = $ua->get("https://app.ticketmaster.eu/mfxapi/v1/event/updated?updated_since&lang&domain_ids&rows");
-
-print $response->as_string;
-{% endhighlight %}
-
-
-{% highlight py %}
-from urllib2 import Request, urlopen
-
-headers = {
-  'Accept': 'application/json'
-}
-request = Request('https://app.ticketmaster.eu/mfxapi/v1/event/updated?updated_since&lang&domain_ids&rows', headers=headers)
-
-response_body = urlopen(request).read()
-print response_body
-{% endhighlight %}
-
-
-{% highlight php %}
-<?php
-$ch = curl_init();
-
-curl_setopt($ch, CURLOPT_URL, "https://app.ticketmaster.eu/mfxapi/v1/event/updated?updated_since&lang&domain_ids&rows");
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-curl_setopt($ch, CURLOPT_HEADER, FALSE);
-
-curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-  "Accept: application/json"
-));
-
-$response = curl_exec($ch);
-curl_close($ch);
-
-var_dump($response);
-{% endhighlight %}
-
-
-
-{% highlight ruby %}
-require 'rubygems' if RUBY_VERSION < '1.9'
-require 'rest_client'
-
-headers = {
-  :accept => 'application/json'
-}
-
-response = RestClient.get 'https://app.ticketmaster.eu/mfxapi/v1/event/updated?updated_since&lang&domain_ids&rows', headers
-puts response
-{% endhighlight %}
-
-
-
-{% highlight go %}
-package main
-
-import (
-	"fmt"
-	"io/ioutil"
-	"net/http"
-)
-
-func main() {
-	client := &http.Client{}
-	
-	req, _ := http.NewRequest("GET", "https://app.ticketmaster.eu/mfxapi/v1/event/updated?updated_since&lang&domain_ids&rows", nil)
-
-	req.Header.Add("Accept", "application/json")
-
-	resp, err := client.Do(req)
-
-	if err != nil {
-		fmt.Println("Errored when sending request to the server")
-		return
-	}
-
-	defer resp.Body.Close()
-	resp_body, _ := ioutil.ReadAll(resp.Body)
-
-	fmt.Println(resp.Status)
-	fmt.Println(string(resp_body))
-}
-{% endhighlight %}
-
-
-{% highlight csharp %}
-//Common testing requirement. If you are consuming an API in a sandbox/test region, uncomment this line of code ONLY for non production uses.
-//System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-
-//Be sure to run "Install-Package Microsoft.Net.Http" from your nuget command line.
-using System;
-using System.Net.Http;
-
-var baseAddress = new Uri("https://app.ticketmaster.eu/mfxapi/v1/");
-
-using (var httpClient = new HttpClient{ BaseAddress = baseAddress })
-{
-
-  httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
-  
-  using(var response = await httpClient.GetAsync("event/updated?updated_since&lang&domain_ids&rows"))
-  { 
-        string responseData = await response.Content.ReadAsStringAsync();
-  }
-}
-{% endhighlight %}
-
-
-{% highlight vb %}
-Dim request = TryCast(System.Net.WebRequest.Create("https://app.ticketmaster.eu/mfxapi/v1/event/updated?updated_since&lang&domain_ids&rows"), System.Net.HttpWebRequest)
-
-request.Method = "GET"
-
-request.Accept = "application/json"
-
-request.ContentLength = 0
-Dim responseContent As String
-Using response = TryCast(request.GetResponse(), System.Net.HttpWebResponse)
-  Using reader = New System.IO.StreamReader(response.GetResponseStream())
-    responseContent = reader.ReadToEnd()
-  End Using
-End Using
-{% endhighlight %}
-
-
-{% highlight groovy %}
-import groovyx.net.http.RESTClient
-import static groovyx.net.http.ContentType.JSON
-import groovy.json.JsonSlurper
-import groovy.json.JsonOutput
-
-@Grab (group = 'org.codehaus.groovy.modules.http-builder', module = 'http-builder', version = '0.5.0')
-def client = new RESTClient("https://app.ticketmaster.eu/mfxapi/v1")
-
-def emptyHeaders = [:]
-emptyHeaders."Accept" = "application/json"
-
-response = client.get( path : "/event/updated?updated_since&lang&domain_ids&rows", headers: emptyHeaders )
-
-println("Status:" + response.status)
-
-if (response.data) {
-  println("Content Type: " + response.contentType)
-  println("Body:\n" + JsonOutput.prettyPrint(JsonOutput.toJson(response.data)))
-}
-{% endhighlight %}
-
-
-{% highlight objc %}
-NSURL *URL = [NSURL URLWithString:@"https://app.ticketmaster.eu/mfxapi/v1/event/updated?updated_since&lang&domain_ids&rows"];
-
-NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
-[request setHTTPMethod:@"GET"];
-
-[request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-
-NSURLSession *session = [NSURLSession sharedSession];
-NSURLSessionDataTask *task = [session dataTaskWithRequest:request
-                                        completionHandler:
-                              ^(NSData *data, NSURLResponse *response, NSError *error) {
-
-                                  if (error) {
-                                      // Handle error...
-                                      return;
-                                  }
-
-                                  if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
-                                      NSLog(@"Response HTTP Status code: %ld\n", (long)[(NSHTTPURLResponse *)response statusCode]);
-                                      NSLog(@"Response HTTP Headers:\n%@\n", [(NSHTTPURLResponse *)response allHeaderFields]);
-                                  }
-
-                                  NSString* body = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-                                  NSLog(@"Response Body:\n%@\n", body);
-                              }];
-[task resume];
-{% endhighlight %}
-
-
-{% highlight swift %}
-// NOTE: Uncommment following two lines for use in a Playground
-// import XCPlayground
-// XCPlaygroundPage.currentPage.needsIndefiniteExecution = true
-
-let url = NSURL(string: "https://app.ticketmaster.eu/mfxapi/v1/event/updated?updated_since&lang&domain_ids&rows")!
-let request = NSMutableURLRequest(URL: url)
-request.addValue("application/json", forHTTPHeaderField: "Accept")
-
-let session = NSURLSession.sharedSession()
-let task = session.dataTaskWithRequest(request) { data, response, error in
-    if let response = response, data = data {
-        print(response)
-        print(String(data: data, encoding: NSUTF8StringEncoding))
-    } else {
-        print(error)
-    }
-}
-
-task.resume()
-{% endhighlight %}
-
-{: .article}
->[Request](#req)
->[Response](#res)
-{: .reqres}
-
-{% highlight HTTP %}
-GET /event/updated?updated_since&lang&domain_ids&rows HTTP/1.1
-Host: https://app.ticketmaster.eu/mfxapi/v1
-Accept: application/json
-Content-Length: 0
-{% endhighlight %}
-
-{% highlight HTTP %}
-HTTP/1.1 200 OK
-Server: Cowboy
-Connection: keep-alive
-X-Newrelic-App-Data: PxQDVFVRCQITVlZRDgcFV0YdFHYaFhEHQxFSERd/cWYcShNDHUwDTFQHAU1WTQsGAFZTVgIDBV9dCA8KW19WTgRRClIUGgYFVlBYWQRZAANXBwRXRE9eUlwXBD8=
-Content-Type: application/json
-Access-Control-Allow-Origin: *
-Access-Control-Allow-Methods: OPTIONS,GET,HEAD,POST,PUT,DELETE,TRACE,CONNECT
-Access-Control-Max-Age: 10
-X-Apiary-Transaction-Id: 5698dce0462e330b00d14313
-Content-Length: 4320
-Date: Fri, 15 Jan 2016 11:16:37 GMT
-Via: 1.1 vegur
-
-{
-  "events": [
-    {
-      "id": "467619",
-      "domain_id": "norway",
-      "name": "Drømmeshow",
-      "url": "http://www.billettservice.no/checkout/event.php?eventId=GAP15071&language=no-no&track=DiscoveryAPI",
-      "eventdate": {
-        "format": "datetime",
-        "value": "2015-07-15T17:00:00Z"
-      },
-      "day_of_week": "Onsdag",
-      "timezone": "Europe/Berlin",
-      "localeventdate": "2015-07-15T19:00:00",
-      "images": [
-        {
-          "url": "http://media.ticketmaster.com/img/tat/cft1/201507/01/678040.jpg?track=DiscoveryAPI",
-          "type": "standard",
-          "width": 205,
-          "height": 115
-        },
-        {
-          "url": "http://media.ticketmaster.com/img/tat/cft1/201507/01/678030.jpg?track=DiscoveryAPI",
-          "type": "large",
-          "width": 305,
-          "height": 225
-        }
-      ],
-      "onsale": {
-        "format": "datetime",
-        "value": "2015-06-29T13:05:00Z"
-      },
-      "offsale": {
-        "format": "datetime",
-        "value": "2015-07-15T18:00:00Z"
-      },
-      "properties": {
-        "canceled": false,
-        "rescheduled": false,
-        "seats_avail": true,
-        "sold_out": false,
-        "package": false
-      },
-      "venue": {
-        "id": "8653",
-        "name": "Apotekergaarden",
-        "location": {
-          "address": {
-            "address": "Skolegaten 3",
-            "postal_code": "4876",
-            "city": "Grimstad",
-            "country": "Norway",
-            "long": 8.59344,
-            "lat": 58.34178
-          }
-        }
-      },
-      "categories": [
-        {
-          "name": "Teater/Show",
-          "id": 10002,
-          "subcategories": [
-            {
-              "name": "Show",
-              "id": 1118
-            }
-          ]
-        },
-        {
-          "name": "Comedy",
-          "id": 10102,
-          "subcategories": [
-            {
-              "name": "Humor/Komedie",
-              "id": 39
-            }
-          ]
-        }
-      ],
-      "attractions": [
-        {
-          "id": 961604,
-          "name": "Drømmeshow",
-          "url": "http://www.billettservice.no/artist/drommeshow-billetter/961604?track=DiscoveryAPI"
-        }
-      ],
-      "price_ranges": {
-        "excluding_ticket_fees": {
-          "min": 395,
-          "max": 395
-        },
-        "including_ticket_fees": {
-          "min": 420,
-          "max": 420
-        }
-      },
-      "currency": "NOK"
-    },
-    {
-      "id": "467981",
-      "domain_id": "norway",
-      "name": "Weekend Pass  PALMESUS 2016",
-      "url": "http://www.billettservice.no/checkout/event.php?eventId=KYS2016&language=no-no&track=DiscoveryAPI",
-      "eventdate": {
-        "format": "datetime",
-        "value": "2016-07-01T10:01:00Z"
-      },
-      "day_of_week": "Fredag",
-      "timezone": "Europe/Berlin",
-      "localeventdate": "2016-07-01T12:01:00",
-      "images": [
-        {
-          "url": "http://media.ticketmaster.com/img/tat/cft1/201411/28/524730.jpg?track=DiscoveryAPI",
-          "type": "standard",
-          "width": 205,
-          "height": 115
-        },
-        {
-          "url": "http://media.ticketmaster.com/img/tat/cft1/201411/28/524720.jpg?track=DiscoveryAPI",
-          "type": "large",
-          "width": 305,
-          "height": 225
-        }
-      ],
-      "onsale": {
-        "format": "datetime",
-        "value": "2015-07-06T15:00:00Z"
-      },
-      "offsale": {
-        "format": "datetime",
-        "value": "2016-07-01T09:00:00Z"
-      },
-      "properties": {
-        "canceled": false,
-        "rescheduled": false,
-        "seats_avail": false,
-        "sold_out": true,
-        "package": false
-      },
-      "venue": {
-        "id": "3259",
-        "name": "Bystranda",
-        "location": {
-          "address": {
-            "postal_code": "4634",
-            "city": "Kristiansand S",
-            "country": "Norway",
-            "long": 8.00806,
-            "lat": 58.14623
-          }
-        }
-      },
-      "categories": [
-        {
-          "name": "Musikk",
-          "id": 10001,
-          "subcategories": [
-            {
-              "name": "Rock/Pop",
-              "id": 1
-            }
-          ]
-        },
-        {
-          "name": "Festivaler",
-          "id": 10101,
-          "subcategories": [
-            {
-              "name": "Musikkfestival",
-              "id": 1005
-            }
-          ]
-        }
-      ],
-      "attractions": [
-        {
-          "id": 901146,
-          "name": "Palmesus",
-          "url": "http://www.billettservice.no/artist/palmesus-billetter/901146?track=DiscoveryAPI"
-        }
-      ],
-      "price_ranges": {
-        "excluding_ticket_fees": {
-          "min": 1299,
-          "max": 1299
-        },
-        "including_ticket_fees": {
-          "min": 1349,
-          "max": 1349
-        }
-      },
-      "currency": "NOK"
-    }
-  ],
-  "next": "?lang=no-no&domain_ids=norway&updated_since=2015-07-08T09:41:09.288Z&rows=10"
-}
-
 {% endhighlight %}
 
 
