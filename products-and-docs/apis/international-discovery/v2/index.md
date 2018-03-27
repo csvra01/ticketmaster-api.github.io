@@ -3691,19 +3691,20 @@ The Venue Service API allows you to search for event venues and get details for 
 Find venues and filter your search by name, and much more.
 
 {: .code.red}
-https://app.ticketmaster.eu/mfxapi/v1/venues
+https://app.ticketmaster.eu/mfxapi/v2/venues
 
 | Parameters | Optional values | Type | Required |
 | ---------- | --------------- | ---- | -------- |
-|`domain_ids` | The unique identifier for the domain or market. Use a comma separated list of values to search multiple domains. (A logical OR search is performed). Example: norway. | string | Yes |
+|`domain` | The unique identifier for the domain or market. Multiple domains can be passed e.g. domain=sweden&domain=finland. Example: norway. | string | Yes |
 |`lang` | The language in ISO code format. The default language is specified in the Domains List service. Usually two or three languages are supported. Example: no-no. | string | No |
-|`venuename` | The venue name. Use a comma separated list of values to search multiple venues. (A logical OR search is performed). Example: Rockefeller. | string | No |
+|`venue_name` | The venue name. Use a comma separated list of values to search multiple venues. (A logical OR search is performed). Example: Rockefeller. | string | No |
 |`venue_ids` | The unique identifier for the venue which is linked to the domain. Use a comma separated list of values to search multiple venues. Example: no-no. | string | No |
 |`city_ids` | The unique identifier for the City. Use a comma separated list of values to search multiple Cities. (A logical OR search is performed). Supported City names and IDs are available in the Cities List service. Example: 40. | string | No |
 |`postal_code` | The postal code or zip code of the venue. Example: 0151. | string | No |
 |`lat` | The latitude of the required search location. Example: 59.9047. | string | No |
-|`lat` | The longitude of the required search location. Example: 10.7497. | string | No |
+|`long` | The longitude of the required search location. Example: 10.7497. | string | No |
 |`radius` | The radius to be applied to results where a location (lat, long) is used as a query parameter. The radius is given in km. Example: 50. | Integer | No |
+|`exclude_external` | Excludes external venues.  | Boolean | No |
 |`sort_by` | The method for sorting the results. Default: venuename. Possible values:  venuename , cityname . | string | No |
 |`order` | The order in which results are sorted, whether ascending or descending. Default: asc. Possible values:  asc , desc . | string | No |
 |`rows` | The number of rows to return, up to a maximum of 250. Default: 10. | Integer | No |
@@ -3750,7 +3751,7 @@ There are additional parameters which allow you to filter the search by venue na
 {% highlight js %}
 var request = new XMLHttpRequest();
 
-request.open('GET', '/venues?domain_ids&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start');
+request.open('GET', '/venues?domain&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start');
 
 request.setRequestHeader('Accept', 'application/json');
 
@@ -3768,7 +3769,7 @@ request.send();
 {% highlight bash %}
 curl --include \
      --header "Accept: application/json" \
-'https://app.ticketmaster.eu/mfxapi/v1/attractions/similar?attraction_id&lang&domain_id&has_events&rows'
+'https://app.ticketmaster.eu/mfxapi/v2/venues?domain&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start'
 {% endhighlight %}
 
 
@@ -3792,7 +3793,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType;
 
 Client client = ClientBuilder.newClient();
-Response response = client.target("https://app.ticketmaster.eu/mfxapi/v1/venues?domain_ids&#38;lang&#38;venuename&#38;venue_ids&#38;city_ids&#38;postal_code&#38;lat&#38;long&#38;radius&#38;sort_by&#38;order&#38;rows&#38;start")
+Response response = client.target("https://app.ticketmaster.eu/mfxapi/v2/venues?domain&#38;lang&#38;venuename&#38;venue_ids&#38;city_ids&#38;postal_code&#38;lat&#38;long&#38;radius&#38;sort_by&#38;order&#38;rows&#38;start")
   .request(MediaType.TEXT_PLAIN_TYPE)
   .header("Accept", "application/json")
   .get();
@@ -3808,7 +3809,7 @@ var request = require('request');
 
 request({
   method: 'GET',
-  url: 'https://app.ticketmaster.eu/mfxapi/v1/venues?domain_ids&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start',
+  url: 'https://app.ticketmaster.eu/mfxapi/v2/venues?domain&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start',
   headers: {
     'Accept': 'application/json'
   }}, function (error, response, body) {
@@ -3826,7 +3827,7 @@ my $ua   = LWP::UserAgent->new;
 
 $ua->default_header("Accept" => "application/json");
 
-my $response = $ua->get("https://app.ticketmaster.eu/mfxapi/v1/venues?domain_ids&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start");
+my $response = $ua->get("https://app.ticketmaster.eu/mfxapi/v2/venues?domain&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start");
 
 print $response->as_string;
 {% endhighlight %}
@@ -3837,7 +3838,7 @@ from urllib2 import Request, urlopen
 headers = {
   'Accept': 'application/json'
 }
-request = Request('https://app.ticketmaster.eu/mfxapi/v1/venues?domain_ids&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start', headers=headers)
+request = Request('https://app.ticketmaster.eu/mfxapi/v2/venues?domain&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start', headers=headers)
 
 response_body = urlopen(request).read()
 print response_body
@@ -3847,7 +3848,7 @@ print response_body
 <?php
 $ch = curl_init();
 
-curl_setopt($ch, CURLOPT_URL, "https://app.ticketmaster.eu/mfxapi/v1/venues?domain_ids&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start");
+curl_setopt($ch, CURLOPT_URL, "https://app.ticketmaster.eu/mfxapi/v2/venues?domain&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 curl_setopt($ch, CURLOPT_HEADER, FALSE);
 
@@ -3870,7 +3871,7 @@ headers = {
   :accept => 'application/json'
 }
 
-response = RestClient.get 'https://app.ticketmaster.eu/mfxapi/v1/venues?domain_ids&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start', headers
+response = RestClient.get 'https://app.ticketmaster.eu/mfxapi/v2/venues?domain&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start', headers
 puts response
 {% endhighlight %}
 
@@ -3887,7 +3888,7 @@ import (
 func main() {
 	client := &http.Client{}
 
-	req, _ := http.NewRequest("GET", "https://app.ticketmaster.eu/mfxapi/v1/venues?domain_ids&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start", nil)
+	req, _ := http.NewRequest("GET", "https://app.ticketmaster.eu/mfxapi/v2/venues?domain&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start", nil)
 
 	req.Header.Add("Accept", "application/json")
 
@@ -3915,14 +3916,14 @@ func main() {
 using System;
 using System.Net.Http;
 
-var baseAddress = new Uri("https://app.ticketmaster.eu/mfxapi/v1/");
+var baseAddress = new Uri("https://app.ticketmaster.eu/mfxapi/v2/");
 
 using (var httpClient = new HttpClient{ BaseAddress = baseAddress })
 {
 
   httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
   
-  using(var response = await httpClient.GetAsync("venues?domain_ids&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start"))
+  using(var response = await httpClient.GetAsync("venues?domain&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start"))
   { 
         string responseData = await response.Content.ReadAsStringAsync();
   }
@@ -3931,7 +3932,7 @@ using (var httpClient = new HttpClient{ BaseAddress = baseAddress })
 
 
 {% highlight vb %}
-Dim request = TryCast(System.Net.WebRequest.Create("https://app.ticketmaster.eu/mfxapi/v1/venues?domain_ids&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start"), System.Net.HttpWebRequest)
+Dim request = TryCast(System.Net.WebRequest.Create("https://app.ticketmaster.eu/mfxapi/v2/venues?domain&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start"), System.Net.HttpWebRequest)
 
 request.Method = "GET"
 
@@ -3954,12 +3955,12 @@ import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
 
 @Grab (group = 'org.codehaus.groovy.modules.http-builder', module = 'http-builder', version = '0.5.0')
-def client = new RESTClient("https://app.ticketmaster.eu/mfxapi/v1")
+def client = new RESTClient("https://app.ticketmaster.eu/mfxapi/v2")
 
 def emptyHeaders = [:]
 emptyHeaders."Accept" = "application/json"
 
-response = client.get( path : "/venues?domain_ids&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start", headers: emptyHeaders )
+response = client.get( path : "/venues?domain&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start", headers: emptyHeaders )
 
 println("Status:" + response.status)
 
@@ -3971,7 +3972,7 @@ if (response.data) {
 
 
 {% highlight objc %}
-NSURL *URL = [NSURL URLWithString:@"https://app.ticketmaster.eu/mfxapi/v1/venues?domain_ids&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start"];
+NSURL *URL = [NSURL URLWithString:@"https://app.ticketmaster.eu/mfxapi/v2/venues?domain&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start"];
 
 NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
 [request setHTTPMethod:@"GET"];
@@ -4005,7 +4006,7 @@ NSURLSessionDataTask *task = [session dataTaskWithRequest:request
 // import XCPlayground
 // XCPlaygroundPage.currentPage.needsIndefiniteExecution = true
 
-let url = NSURL(string: "https://app.ticketmaster.eu/mfxapi/v1/venues?domain_ids&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start")!
+let url = NSURL(string: "https://app.ticketmaster.eu/mfxapi/v2/venues?domain&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start")!
 let request = NSMutableURLRequest(URL: url)
 request.addValue("application/json", forHTTPHeaderField: "Accept")
 
@@ -4028,8 +4029,8 @@ task.resume()
 {: .reqres}
 
 {% highlight HTTP %}
-GET /venues?domain_ids&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start HTTP/1.1
-Host: https://app.ticketmaster.eu/mfxapi/v1
+GET /venues?domain&lang&venuename&venue_ids&city_ids&postal_code&lat&long&radius&sort_by&order&rows&start HTTP/1.1
+Host: https://app.ticketmaster.eu/mfxapi/v2
 Accept: application/json
 Content-Length: 0
 {% endhighlight %}
@@ -4079,13 +4080,13 @@ Via: 1.1 vegur
 Get details for a specific event using the unique identifer for the event. Seatmaps for venues are available in the Event Service - See [Event Seatmaps](#event-seatmap)
 
 {: .code.red}
-https://app.ticketmaster.eu/mfxapi/v1/venue/{venue_id}
+https://app.ticketmaster.eu/mfxapi/v2/venues/{venue_id}
 
 | Parameters | Optional values | Type | Required |
 | ---------- | --------------- | ---- | -------- |
 |`venue_id` | A unique identifier for the venue which is specific to the domain. Example: 7353. | Integer | Yes |
 |`lang` | The language in ISO code format. Example: no-no. | string | No |
-|`domain_ids` | The unique identifier for the domain or market. Although optional, this is recommended. Example: norway. | string | Yes |
+|`domain` | The unique identifier for the domain or market. Although optional, this is recommended. Example: norway. | string | Yes |
 
 {: .aside}
 >[JavaScript](#js)
@@ -4107,7 +4108,7 @@ https://app.ticketmaster.eu/mfxapi/v1/venue/{venue_id}
 {% highlight js %}
 var request = new XMLHttpRequest();
 
-request.open('GET', '/venue/7353?lang&domain_ids');
+request.open('GET', '/venues/7353?lang&domain');
 
 request.setRequestHeader('Accept', 'application/json');
 
@@ -4125,7 +4126,7 @@ request.send();
 {% highlight bash %}
 curl --include \
      --header "Accept: application/json" \
-  'https://app.ticketmaster.eu/mfxapi/v1/venue/7353?lang&domain_ids'
+  'https://app.ticketmaster.eu/mfxapi/v2/venues/7353?lang&domain'
 {% endhighlight %}
 
 
@@ -4149,7 +4150,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType;
 
 Client client = ClientBuilder.newClient();
-Response response = client.target("https://app.ticketmaster.eu/mfxapi/v1/venue/{venue_id}?lang&#38;domain_ids")
+Response response = client.target("https://app.ticketmaster.eu/mfxapi/v2/venues/7353?lang&domain")
   .request(MediaType.TEXT_PLAIN_TYPE)
   .header("Accept", "application/json")
   .get();
@@ -4165,7 +4166,7 @@ var request = require('request');
 
 request({
   method: 'GET',
-  url: 'https://app.ticketmaster.eu/mfxapi/v1/venue/7353?lang&domain_ids',
+  url: 'https://app.ticketmaster.eu/mfxapi/v2/venues/7353?lang&domain',
   headers: {
     'Accept': 'application/json'
   }}, function (error, response, body) {
@@ -4183,7 +4184,7 @@ my $ua   = LWP::UserAgent->new;
 
 $ua->default_header("Accept" => "application/json");
 
-my $response = $ua->get("https://app.ticketmaster.eu/mfxapi/v1/venue/7353?lang&domain_ids");
+my $response = $ua->get("https://app.ticketmaster.eu/mfxapi/v2/venues/7353?lang&domain");
 
 print $response->as_string;
 {% endhighlight %}
@@ -4194,7 +4195,7 @@ from urllib2 import Request, urlopen
 headers = {
   'Accept': 'application/json'
 }
-request = Request('https://app.ticketmaster.eu/mfxapi/v1/venue/7353?lang&domain_ids', headers=headers)
+request = Request('https://app.ticketmaster.eu/mfxapi/v2/venues/7353?lang&domain', headers=headers)
 
 response_body = urlopen(request).read()
 print response_body
@@ -4204,7 +4205,7 @@ print response_body
 <?php
 $ch = curl_init();
 
-curl_setopt($ch, CURLOPT_URL, "https://app.ticketmaster.eu/mfxapi/v1/venue/7353?lang&domain_ids");
+curl_setopt($ch, CURLOPT_URL, "https://app.ticketmaster.eu/mfxapi/v2/venues/7353?lang&domain");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 curl_setopt($ch, CURLOPT_HEADER, FALSE);
 
@@ -4227,7 +4228,7 @@ headers = {
   :accept => 'application/json'
 }
 
-response = RestClient.get 'https://app.ticketmaster.eu/mfxapi/v1/venue/7353?lang&domain_ids', headers
+response = RestClient.get 'https://app.ticketmaster.eu/mfxapi/v2/venues/7353?lang&domain', headers
 puts response
 {% endhighlight %}
 
@@ -4244,7 +4245,7 @@ import (
 func main() {
 	client := &http.Client{}
 
-	req, _ := http.NewRequest("GET", "https://app.ticketmaster.eu/mfxapi/v1/venue/7353?lang&domain_ids", nil)
+	req, _ := http.NewRequest("GET", "https://app.ticketmaster.eu/mfxapi/v2/venues/7353?lang&domain", nil)
 
 	req.Header.Add("Accept", "application/json")
 
@@ -4272,14 +4273,14 @@ func main() {
 using System;
 using System.Net.Http;
 
-var baseAddress = new Uri("https://app.ticketmaster.eu/mfxapi/v1/");
+var baseAddress = new Uri("https://app.ticketmaster.eu/mfxapi/v2/");
 
 using (var httpClient = new HttpClient{ BaseAddress = baseAddress })
 {
 
   httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
   
-  using(var response = await httpClient.GetAsync("venue/{venue_id}?lang&domain_ids"))
+  using(var response = await httpClient.GetAsync("venues/{venue_id}?lang&domain"))
   { 
         string responseData = await response.Content.ReadAsStringAsync();
   }
@@ -4288,7 +4289,7 @@ using (var httpClient = new HttpClient{ BaseAddress = baseAddress })
 
 
 {% highlight vb %}
-Dim request = TryCast(System.Net.WebRequest.Create("https://app.ticketmaster.eu/mfxapi/v1/venue/7353?lang&domain_ids"), System.Net.HttpWebRequest)
+Dim request = TryCast(System.Net.WebRequest.Create("https://app.ticketmaster.eu/mfxapi/v2/venues/7353?lang&domain"), System.Net.HttpWebRequest)
 
 request.Method = "GET"
 
@@ -4311,12 +4312,12 @@ import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
 
 @Grab (group = 'org.codehaus.groovy.modules.http-builder', module = 'http-builder', version = '0.5.0')
-def client = new RESTClient("https://app.ticketmaster.eu/mfxapi/v1")
+def client = new RESTClient("https://app.ticketmaster.eu/mfxapi/v2")
 
 def emptyHeaders = [:]
 emptyHeaders."Accept" = "application/json"
 
-response = client.get( path : "/venue/{venue_id}?lang&domain_ids", headers: emptyHeaders )
+response = client.get( path : "/venues/{venue_id}?lang&domain", headers: emptyHeaders )
 
 println("Status:" + response.status)
 
@@ -4328,7 +4329,7 @@ if (response.data) {
 
 
 {% highlight objc %}
-NSURL *URL = [NSURL URLWithString:@"https://app.ticketmaster.eu/mfxapi/v1/venue/7353?lang&domain_ids"];
+NSURL *URL = [NSURL URLWithString:@"https://app.ticketmaster.eu/mfxapi/v2/venues/7353?lang&domain"];
 
 NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
 [request setHTTPMethod:@"GET"];
@@ -4362,7 +4363,7 @@ NSURLSessionDataTask *task = [session dataTaskWithRequest:request
 // import XCPlayground
 // XCPlaygroundPage.currentPage.needsIndefiniteExecution = true
 
-let url = NSURL(string: "https://app.ticketmaster.eu/mfxapi/v1/venue/7353?lang&domain_ids")!
+let url = NSURL(string: "https://app.ticketmaster.eu/mfxapi/v2/venues/7353?lang&domain")!
 let request = NSMutableURLRequest(URL: url)
 request.addValue("application/json", forHTTPHeaderField: "Accept")
 
@@ -4385,8 +4386,8 @@ task.resume()
 {: .reqres}
 
 {% highlight HTTP %}
-GET /venue/7353?lang&domain_ids HTTP/1.1
-Host: https://app.ticketmaster.eu/mfxapi/v1
+GET /venues/7353?lang&domain HTTP/1.1
+Host: https://app.ticketmaster.eu/mfxapi/v2
 Accept: application/json
 Content-Length: 0
 {% endhighlight %}
@@ -4407,7 +4408,6 @@ Via: 1.1 vegur
 
 {
   "id": "7353",
-  "domainId": "sweden",
   "name": "Araby Park Arena",
   "code": "AAP",
   "url": "http://www.ticnet.se/venue/araby-park-arena-vaxjo-tickets/AAP/511?track=DiscoveryAPI",
@@ -4436,11 +4436,11 @@ Get a list of countries and domains for each. Although not required, it is advis
 relates to the Ticketmaster website through which tickets are listed and sold, whereas the Country is a geographical location.
 
 {: .code.red}
-https://app.ticketmaster.eu/mfxapi/v1/countries
+https://app.ticketmaster.eu/mfxapi/v2/countries
 
 | Parameters | Optional values | Type | Required |
 | ---------- | --------------- | ---- | -------- |
-|`domain_ids` | A unique identifier for the domain or market. Example: 56. | string | No |
+|`domain` | A unique identifier for the domain or market. Example: 56. | string | No |
 |`lang` | The language in ISO code format. Example: en-us. | string | No |
 
 {: .aside}
@@ -4481,7 +4481,7 @@ request.send();
 {% highlight bash %}
 curl --include \
      --header "Accept: application/json" \
-  'https://app.ticketmaster.eu/mfxapi/v1/countries?lang&domain_id'
+  'https://app.ticketmaster.eu/mfxapi/v2/countries?lang&domain'
 {% endhighlight %}
 
 
@@ -4505,7 +4505,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType;
 
 Client client = ClientBuilder.newClient();
-Response response = client.target("https://app.ticketmaster.eu/mfxapi/v1/countries?lang&#38;domain_id")
+Response response = client.target("https://app.ticketmaster.eu/mfxapi/v2/countries?lang&domain")
   .request(MediaType.TEXT_PLAIN_TYPE)
   .header("Accept", "application/json")
   .get();
@@ -4521,7 +4521,7 @@ var request = require('request');
 
 request({
   method: 'GET',
-  url: 'https://app.ticketmaster.eu/mfxapi/v1/countries?lang&domain_id',
+  url: 'https://app.ticketmaster.eu/mfxapi/v2/countries?lang&domain',
   headers: {
     'Accept': 'application/json'
   }}, function (error, response, body) {
@@ -4539,7 +4539,7 @@ my $ua   = LWP::UserAgent->new;
 
 $ua->default_header("Accept" => "application/json");
 
-my $response = $ua->get("https://app.ticketmaster.eu/mfxapi/v1/countries?lang&domain_id");
+my $response = $ua->get("https://app.ticketmaster.eu/mfxapi/v2/countries?lang&domain");
 
 print $response->as_string;
 {% endhighlight %}
@@ -4550,7 +4550,7 @@ from urllib2 import Request, urlopen
 headers = {
   'Accept': 'application/json'
 }
-request = Request('https://app.ticketmaster.eu/mfxapi/v1/countries?lang&domain_id', headers=headers)
+request = Request('https://app.ticketmaster.eu/mfxapi/v2/countries?lang&domain', headers=headers)
 
 response_body = urlopen(request).read()
 print response_body
@@ -4560,7 +4560,7 @@ print response_body
 <?php
 $ch = curl_init();
 
-curl_setopt($ch, CURLOPT_URL, "https://app.ticketmaster.eu/mfxapi/v1/countries?lang&domain_id");
+curl_setopt($ch, CURLOPT_URL, "https://app.ticketmaster.eu/mfxapi/v2/countries?lang&domain");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 curl_setopt($ch, CURLOPT_HEADER, FALSE);
 
@@ -4583,7 +4583,7 @@ headers = {
   :accept => 'application/json'
 }
 
-response = RestClient.get 'https://app.ticketmaster.eu/mfxapi/v1/countries?lang&domain_id', headers
+response = RestClient.get 'https://app.ticketmaster.eu/mfxapi/v2/countries?lang&domain', headers
 puts response
 {% endhighlight %}
 
@@ -4600,7 +4600,7 @@ import (
 func main() {
 	client := &http.Client{}
 
-	req, _ := http.NewRequest("GET", "https://app.ticketmaster.eu/mfxapi/v1/countries?lang&domain_id", nil)
+	req, _ := http.NewRequest("GET", "https://app.ticketmaster.eu/mfxapi/v2/countries?lang&domain", nil)
 
 	req.Header.Add("Accept", "application/json")
 
@@ -4628,14 +4628,14 @@ func main() {
 using System;
 using System.Net.Http;
 
-var baseAddress = new Uri("https://app.ticketmaster.eu/mfxapi/v1/");
+var baseAddress = new Uri("https://app.ticketmaster.eu/mfxapi/v2/");
 
 using (var httpClient = new HttpClient{ BaseAddress = baseAddress })
 {
 
   httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
   
-  using(var response = await httpClient.GetAsync("countries?lang&domain_id"))
+  using(var response = await httpClient.GetAsync("countries?lang&domain"))
   { 
         string responseData = await response.Content.ReadAsStringAsync();
   }
@@ -4644,7 +4644,7 @@ using (var httpClient = new HttpClient{ BaseAddress = baseAddress })
 
 
 {% highlight vb %}
-Dim request = TryCast(System.Net.WebRequest.Create("https://app.ticketmaster.eu/mfxapi/v1/countries?lang&domain_id"), System.Net.HttpWebRequest)
+Dim request = TryCast(System.Net.WebRequest.Create("https://app.ticketmaster.eu/mfxapi/v2/countries?lang&domain"), System.Net.HttpWebRequest)
 
 request.Method = "GET"
 
@@ -4667,12 +4667,12 @@ import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
 
 @Grab (group = 'org.codehaus.groovy.modules.http-builder', module = 'http-builder', version = '0.5.0')
-def client = new RESTClient("https://app.ticketmaster.eu/mfxapi/v1")
+def client = new RESTClient("https://app.ticketmaster.eu/mfxapi/v2")
 
 def emptyHeaders = [:]
 emptyHeaders."Accept" = "application/json"
 
-response = client.get( path : "/countries?lang&domain_id", headers: emptyHeaders )
+response = client.get( path : "/countries?lang&domain", headers: emptyHeaders )
 
 println("Status:" + response.status)
 
@@ -4684,7 +4684,7 @@ if (response.data) {
 
 
 {% highlight objc %}
-NSURL *URL = [NSURL URLWithString:@"https://app.ticketmaster.eu/mfxapi/v1/countries?lang&domain_id"];
+NSURL *URL = [NSURL URLWithString:@"https://app.ticketmaster.eu/mfxapi/v2/countries?lang&domain"];
 
 NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
 [request setHTTPMethod:@"GET"];
@@ -4718,7 +4718,7 @@ NSURLSessionDataTask *task = [session dataTaskWithRequest:request
 // import XCPlayground
 // XCPlaygroundPage.currentPage.needsIndefiniteExecution = true
 
-let url = NSURL(string: "https://app.ticketmaster.eu/mfxapi/v1/countries?lang&domain_id")!
+let url = NSURL(string: "https://app.ticketmaster.eu/mfxapi/v2/countries?lang&domain")!
 let request = NSMutableURLRequest(URL: url)
 request.addValue("application/json", forHTTPHeaderField: "Accept")
 
@@ -4741,8 +4741,8 @@ task.resume()
 {: .reqres}
 
 {% highlight HTTP %}
-GET /countries?lang&domain_id HTTP/1.1
-Host: https://app.ticketmaster.eu/mfxapi/v1
+GET /countries?lang&domain HTTP/1.1
+Host: https://app.ticketmaster.eu/mfxapi/v2
 Accept: application/json
 Content-Length: 0
 {% endhighlight %}
@@ -4892,7 +4892,7 @@ Via: 1.1 vegur
 Get a list of domains (countries and markets) and the domain ID as well supported langauges.Although not required, it is advisable to specify the domain. The domain relates to the Ticketmaster website through which tickets are listed and sold. Domain_id differs from the Country_id which is the geographical location rather than the market.
 
 {: .code.red}
-https://app.ticketmaster.eu/mfxapi/v1/domains
+https://app.ticketmaster.eu/mfxapi/v2/domains
 
 | Parameters | Optional values | Type | Required |
 | ---------- | --------------- | ---- | -------- |
@@ -4918,7 +4918,7 @@ https://app.ticketmaster.eu/mfxapi/v1/domains
 {% highlight js %}
 var request = new XMLHttpRequest();
 
-request.open('GET', 'https://app.ticketmaster.eu/mfxapi/v1/domains?country_id');
+request.open('GET', 'https://app.ticketmaster.eu/mfxapi/v2/domains?country_id');
 
 request.setRequestHeader('Accept', 'application/json');
 
@@ -4936,7 +4936,7 @@ request.send();
 {% highlight bash %}
 curl --include \
      --header "Accept: application/json" \
-  'https://app.ticketmaster.eu/mfxapi/v1/domains?country_id'
+  'https://app.ticketmaster.eu/mfxapi/v2/domains?country_id'
 {% endhighlight %}
 
 
@@ -4960,7 +4960,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType;
 
 Client client = ClientBuilder.newClient();
-Response response = client.target("https://app.ticketmaster.eu/mfxapi/v1/domains?country_id")
+Response response = client.target("https://app.ticketmaster.eu/mfxapi/v2/domains?country_id")
   .request(MediaType.TEXT_PLAIN_TYPE)
   .header("Accept", "application/json")
   .get();
@@ -4976,7 +4976,7 @@ var request = require('request');
 
 request({
   method: 'GET',
-  url: 'https://app.ticketmaster.eu/mfxapi/v1/domains?country_id',
+  url: 'https://app.ticketmaster.eu/mfxapi/v2/domains?country_id',
   headers: {
     'Accept': 'application/json'
   }}, function (error, response, body) {
@@ -4994,7 +4994,7 @@ my $ua   = LWP::UserAgent->new;
 
 $ua->default_header("Accept" => "application/json");
 
-my $response = $ua->get("https://app.ticketmaster.eu/mfxapi/v1/domains?country_id");
+my $response = $ua->get("https://app.ticketmaster.eu/mfxapi/v2/domains?country_id");
 
 print $response->as_string;
 {% endhighlight %}
@@ -5005,7 +5005,7 @@ from urllib2 import Request, urlopen
 headers = {
   'Accept': 'application/json'
 }
-request = Request('https://app.ticketmaster.eu/mfxapi/v1/domains?country_id', headers=headers)
+request = Request('https://app.ticketmaster.eu/mfxapi/v2/domains?country_id', headers=headers)
 
 response_body = urlopen(request).read()
 print response_body
@@ -5015,7 +5015,7 @@ print response_body
 <?php
 $ch = curl_init();
 
-curl_setopt($ch, CURLOPT_URL, "https://app.ticketmaster.eu/mfxapi/v1/domains?country_id");
+curl_setopt($ch, CURLOPT_URL, "https://app.ticketmaster.eu/mfxapi/v2/domains?country_id");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 curl_setopt($ch, CURLOPT_HEADER, FALSE);
 
@@ -5038,7 +5038,7 @@ headers = {
   :accept => 'application/json'
 }
 
-response = RestClient.get 'https://app.ticketmaster.eu/mfxapi/v1/domains?country_id', headers
+response = RestClient.get 'https://app.ticketmaster.eu/mfxapi/v2/domains?country_id', headers
 puts response
 {% endhighlight %}
 
@@ -5055,7 +5055,7 @@ import (
 func main() {
 	client := &http.Client{}
 
-	req, _ := http.NewRequest("GET", "https://app.ticketmaster.eu/mfxapi/v1/domains?country_id", nil)
+	req, _ := http.NewRequest("GET", "https://app.ticketmaster.eu/mfxapi/v2/domains?country_id", nil)
 
 	req.Header.Add("Accept", "application/json")
 
@@ -5083,7 +5083,7 @@ func main() {
 using System;
 using System.Net.Http;
 
-var baseAddress = new Uri("https://app.ticketmaster.eu/mfxapi/v1/");
+var baseAddress = new Uri("https://app.ticketmaster.eu/mfxapi/v2/");
 
 using (var httpClient = new HttpClient{ BaseAddress = baseAddress })
 {
@@ -5101,7 +5101,7 @@ using (var httpClient = new HttpClient{ BaseAddress = baseAddress })
 {% highlight vb %}
 
 
-Dim request = TryCast(System.Net.WebRequest.Create("https://app.ticketmaster.eu/mfxapi/v1/domains?country_id
+Dim request = TryCast(System.Net.WebRequest.Create("https://app.ticketmaster.eu/mfxapi/v2/domains?country_id
 "), System.Net.HttpWebRequest)
 
 request.Method = "GET"
@@ -5127,7 +5127,7 @@ import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
 
 @Grab (group = 'org.codehaus.groovy.modules.http-builder', module = 'http-builder', version = '0.5.0')
-def client = new RESTClient("https://app.ticketmaster.eu/mfxapi/v1")
+def client = new RESTClient("https://app.ticketmaster.eu/mfxapi/v2")
 
 def emptyHeaders = [:]
 emptyHeaders."Accept" = "application/json"
@@ -5144,7 +5144,7 @@ if (response.data) {
 
 
 {% highlight objc %}
-NSURL *URL = [NSURL URLWithString:@"https://app.ticketmaster.eu/mfxapi/v1/domains?country_id
+NSURL *URL = [NSURL URLWithString:@"https://app.ticketmaster.eu/mfxapi/v2/domains?country_id
 "];
 
 NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
@@ -5179,7 +5179,7 @@ NSURLSessionDataTask *task = [session dataTaskWithRequest:request
 // import XCPlayground
 // XCPlaygroundPage.currentPage.needsIndefiniteExecution = true
 
-let url = NSURL(string: "https://app.ticketmaster.eu/mfxapi/v1/domains?country_id
+let url = NSURL(string: "https://app.ticketmaster.eu/mfxapi/v2/domains?country_id
 ")!
 let request = NSMutableURLRequest(URL: url)
 request.addValue("application/json", forHTTPHeaderField: "Accept")
@@ -5204,7 +5204,7 @@ task.resume()
 
 {% highlight HTTP %}
 GET /domains?country_id HTTP/1.1
-Host: https://app.ticketmaster.eu/mfxapi/v1
+Host: https://app.ticketmaster.eu/mfxapi/v2
 Accept: application/json
 Content-Length: 0
 {% endhighlight %}
@@ -5458,12 +5458,12 @@ Via: 1.1 vegur
 Get a list of city names and city IDs.
 
 {: .code.red}
-https://app.ticketmaster.eu/mfxapi/v1/cities
+https://app.ticketmaster.eu/mfxapi/v2/cities
 
 | Parameters | Optional values | Type | Required |
 | ---------- | --------------- | ---- | -------- |
 |`country_id` | A unique identifier for the country. Example: 56.| string | No |
-|`domain_id` | A unique identifier for the domain or market. Example: norway. | string | No |
+|`domain` | A unique identifier for the domain or market. Example: norway. | string | No |
 |`lang` | The language in ISO code format. Example: 56. | string | No |
 
 {: .aside}
@@ -5486,7 +5486,7 @@ https://app.ticketmaster.eu/mfxapi/v1/cities
 {% highlight js %}
 var request = new XMLHttpRequest();
 
-request.open('GET', '/cities?lang&domain_id&country_id');
+request.open('GET', '/cities?lang&domain&country_id');
 
 request.setRequestHeader('Accept', 'application/json');
 
@@ -5504,7 +5504,7 @@ request.send();
 {% highlight bash %}
 curl --include \
      --header "Accept: application/json" \
-  'https://app.ticketmaster.eu/mfxapi/v1/cities?lang&domain_id&country_id'
+  'https://app.ticketmaster.eu/mfxapi/v2/cities?lang&domain&country_id'
 {% endhighlight %}
 
 
@@ -5528,7 +5528,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType;
 
 Client client = ClientBuilder.newClient();
-Response response = client.target("https://app.ticketmaster.eu/mfxapi/v1/cities?lang&#38;domain_id&#38;country_id")
+Response response = client.target("https://app.ticketmaster.eu/mfxapi/v2/cities?lang&domain&country_id")
   .request(MediaType.TEXT_PLAIN_TYPE)
   .header("Accept", "application/json")
   .get();
@@ -5544,7 +5544,7 @@ var request = require('request');
 
 request({
   method: 'GET',
-  url: 'https://app.ticketmaster.eu/mfxapi/v1/cities?lang&domain_id&country_id',
+  url: 'https://app.ticketmaster.eu/mfxapi/v2/cities?lang&domain&country_id',
   headers: {
     'Accept': 'application/json'
   }}, function (error, response, body) {
@@ -5562,7 +5562,7 @@ my $ua   = LWP::UserAgent->new;
 
 $ua->default_header("Accept" => "application/json");
 
-my $response = $ua->get("https://app.ticketmaster.eu/mfxapi/v1/cities?lang&domain_id&country_id");
+my $response = $ua->get("https://app.ticketmaster.eu/mfxapi/v2/cities?lang&domain&country_id");
 
 print $response->as_string;
 {% endhighlight %}
@@ -5573,7 +5573,7 @@ from urllib2 import Request, urlopen
 headers = {
   'Accept': 'application/json'
 }
-request = Request('https://app.ticketmaster.eu/mfxapi/v1/cities?lang&domain_id&country_id', headers=headers)
+request = Request('https://app.ticketmaster.eu/mfxapi/v2/cities?lang&domain&country_id', headers=headers)
 
 response_body = urlopen(request).read()
 print response_body
@@ -5583,7 +5583,7 @@ print response_body
 <?php
 $ch = curl_init();
 
-curl_setopt($ch, CURLOPT_URL, "https://app.ticketmaster.eu/mfxapi/v1/cities?lang&domain_id&country_id");
+curl_setopt($ch, CURLOPT_URL, "https://app.ticketmaster.eu/mfxapi/v2/cities?lang&domain&country_id");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 curl_setopt($ch, CURLOPT_HEADER, FALSE);
 
@@ -5606,7 +5606,7 @@ headers = {
   :accept => 'application/json'
 }
 
-response = RestClient.get 'https://app.ticketmaster.eu/mfxapi/v1/cities?lang&domain_id&country_id', headers
+response = RestClient.get 'https://app.ticketmaster.eu/mfxapi/v2/cities?lang&domain&country_id', headers
 puts response
 {% endhighlight %}
 
@@ -5623,7 +5623,7 @@ import (
 func main() {
 	client := &http.Client{}
 
-	req, _ := http.NewRequest("GET", "https://app.ticketmaster.eu/mfxapi/v1/cities?lang&domain_id&country_id", nil)
+	req, _ := http.NewRequest("GET", "https://app.ticketmaster.eu/mfxapi/v2/cities?lang&domain&country_id", nil)
 
 	req.Header.Add("Accept", "application/json")
 
@@ -5651,14 +5651,14 @@ func main() {
 using System;
 using System.Net.Http;
 
-var baseAddress = new Uri("https://app.ticketmaster.eu/mfxapi/v1/");
+var baseAddress = new Uri("https://app.ticketmaster.eu/mfxapi/v2/");
 
 using (var httpClient = new HttpClient{ BaseAddress = baseAddress })
 {
 
   httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/json");
   
-  using(var response = await httpClient.GetAsync("cities?lang&domain_id&country_id"))
+  using(var response = await httpClient.GetAsync("cities?lang&domain&country_id"))
   { 
         string responseData = await response.Content.ReadAsStringAsync();
   }
@@ -5667,7 +5667,7 @@ using (var httpClient = new HttpClient{ BaseAddress = baseAddress })
 
 
 {% highlight vb %}
-Dim request = TryCast(System.Net.WebRequest.Create("https://app.ticketmaster.eu/mfxapi/v1/cities?lang&domain_id&country_id"), System.Net.HttpWebRequest)
+Dim request = TryCast(System.Net.WebRequest.Create("https://app.ticketmaster.eu/mfxapi/v2/cities?lang&domain&country_id"), System.Net.HttpWebRequest)
 
 request.Method = "GET"
 
@@ -5690,12 +5690,12 @@ import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
 
 @Grab (group = 'org.codehaus.groovy.modules.http-builder', module = 'http-builder', version = '0.5.0')
-def client = new RESTClient("https://app.ticketmaster.eu/mfxapi/v1")
+def client = new RESTClient("https://app.ticketmaster.eu/mfxapi/v2")
 
 def emptyHeaders = [:]
 emptyHeaders."Accept" = "application/json"
 
-response = client.get( path : "/cities?lang&domain_id&country_id", headers: emptyHeaders )
+response = client.get( path : "/cities?lang&domain&country_id", headers: emptyHeaders )
 
 println("Status:" + response.status)
 
@@ -5707,7 +5707,7 @@ if (response.data) {
 
 
 {% highlight objc %}
-NSURL *URL = [NSURL URLWithString:@"https://app.ticketmaster.eu/mfxapi/v1/cities?lang&domain_id&country_id"];
+NSURL *URL = [NSURL URLWithString:@"https://app.ticketmaster.eu/mfxapi/v2/cities?lang&domain&country_id"];
 
 NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
 [request setHTTPMethod:@"GET"];
@@ -5741,7 +5741,7 @@ NSURLSessionDataTask *task = [session dataTaskWithRequest:request
 // import XCPlayground
 // XCPlaygroundPage.currentPage.needsIndefiniteExecution = true
 
-let url = NSURL(string: "https://app.ticketmaster.eu/mfxapi/v1/cities?lang&domain_id&country_id")!
+let url = NSURL(string: "https://app.ticketmaster.eu/mfxapi/v2/cities?lang&domain&country_id")!
 let request = NSMutableURLRequest(URL: url)
 request.addValue("application/json", forHTTPHeaderField: "Accept")
 
@@ -5764,8 +5764,8 @@ task.resume()
 {: .reqres}
 
 {% highlight HTTP %}
-GET /cities?lang&domain_id&country_id HTTP/1.1
-Host: https://app.ticketmaster.eu/mfxapi/v1
+GET /cities?lang&domain&country_id HTTP/1.1
+Host: https://app.ticketmaster.eu/mfxapi/v2
 Accept: application/json
 Content-Length: 0
 {% endhighlight %}
@@ -5940,12 +5940,12 @@ Via: 1.1 vegur
 Get a list of the categories of events available for a specific domain, or a list of subcategories for a major category.
 
 {: .code.red}
-https://app.ticketmaster.eu/mfxapi/v1/categories
+https://app.ticketmaster.eu/mfxapi/v2/categories
 
 | Parameters | Optional values | Type | Required |
 | ---------- | --------------- | ---- | -------- |
 |`lang` | The language in ISO code format. Example: 56. | string | No |
-|`domain_id` | A unique identifer for the domain or market. Example: en-us. | string | No |
+|`domain` | A unique identifer for the domain or market. Example: en-us. | string | No |
 |`category_id` | A unique identifier for the major category such as 'Music'. Example: en-us. | Integer | No |
 |`subcategories` | A flag used in combination with category_id. Where set to 'true' a list of subcategories such as 'Festivals' will be returned for the specified major category. Example: en-us. | boolean | No |
 
@@ -5969,7 +5969,7 @@ https://app.ticketmaster.eu/mfxapi/v1/categories
 {% highlight js %}
 var request = new XMLHttpRequest();
 
-request.open('GET', '/categories?lang&domain_id&category_id&subcategories');
+request.open('GET', '/categories?lang&domain&category_id&subcategories');
 
 request.setRequestHeader('Accept', 'application/json');
 
@@ -5987,7 +5987,7 @@ request.send();
 {% highlight bash %}
 curl --include \
      --header "Accept: application/json" \
-  '/categories?lang&domain_id&category_id&subcategories'
+  '/categories?lang&domain&category_id&subcategories'
 {% endhighlight %}
 
 
@@ -6011,7 +6011,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType;
 
 Client client = ClientBuilder.newClient();
-Response response = client.target("https://app.ticketmaster.eu/mfxapi/v1/categories?lang&#38;domain_id&#38;category_id&#38;subcategories")
+Response response = client.target("https://app.ticketmaster.eu/mfxapi/v2/categories?lang&#38;domain&#38;category_id&#38;subcategories")
   .request(MediaType.TEXT_PLAIN_TYPE)
   .header("Accept", "application/json")
   .get();
@@ -6027,7 +6027,7 @@ var request = require('request');
 
 request({
   method: 'GET',
-  url: 'https://app.ticketmaster.eu/mfxapi/v1/categories?lang&domain_id&category_id&subcategories',
+  url: 'https://app.ticketmaster.eu/mfxapi/v2/categories?lang&domain&category_id&subcategories',
   headers: {
     'Accept': 'application/json'
   }}, function (error, response, body) {
@@ -6045,7 +6045,7 @@ my $ua   = LWP::UserAgent->new;
 
 $ua->default_header("Accept" => "application/json");
 
-my $response = $ua->get("https://app.ticketmaster.eu/mfxapi/v1/categories?lang&domain_id&category_id&subcategories");
+my $response = $ua->get("https://app.ticketmaster.eu/mfxapi/v2/categories?lang&domain&category_id&subcategories");
 
 print $response->as_string;
 {% endhighlight %}
@@ -6056,7 +6056,7 @@ from urllib2 import Request, urlopen
 headers = {
   'Accept': 'application/json'
 }
-request = Request('https://app.ticketmaster.eu/mfxapi/v1/categories?lang&domain_id&category_id&subcategories', headers=headers)
+request = Request('https://app.ticketmaster.eu/mfxapi/v2/categories?lang&domain&category_id&subcategories', headers=headers)
 
 response_body = urlopen(request).read()
 print response_body
@@ -6066,7 +6066,7 @@ print response_body
 <?php
 $ch = curl_init();
 
-curl_setopt($ch, CURLOPT_URL, "https://app.ticketmaster.eu/mfxapi/v1/categories?lang&domain_id&category_id&subcategories");
+curl_setopt($ch, CURLOPT_URL, "https://app.ticketmaster.eu/mfxapi/v2/categories?lang&domain&category_id&subcategories");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 curl_setopt($ch, CURLOPT_HEADER, FALSE);
 
@@ -6089,7 +6089,7 @@ headers = {
   :accept => 'application/json'
 }
 
-response = RestClient.get 'https://app.ticketmaster.eu/mfxapi/v1/categories?lang&domain_id&category_id&subcategories', headers
+response = RestClient.get 'https://app.ticketmaster.eu/mfxapi/v2/categories?lang&domain&category_id&subcategories', headers
 puts response
 {% endhighlight %}
 
@@ -6106,7 +6106,7 @@ import (
 func main() {
 	client := &http.Client{}
 
-	req, _ := http.NewRequest("GET", "https://app.ticketmaster.eu/mfxapi/v1/categories?lang&domain_id&category_id&subcategories", nil)
+	req, _ := http.NewRequest("GET", "https://app.ticketmaster.eu/mfxapi/v2/categories?lang&domain&category_id&subcategories", nil)
 
 	req.Header.Add("Accept", "application/json")
 
@@ -6134,7 +6134,7 @@ func main() {
 using System;
 using System.Net.Http;
 
-var baseAddress = new Uri("https://app.ticketmaster.eu/mfxapi/v1/");
+var baseAddress = new Uri("https://app.ticketmaster.eu/mfxapi/v2/");
 
 using (var httpClient = new HttpClient{ BaseAddress = baseAddress })
 {
@@ -6151,7 +6151,7 @@ using (var httpClient = new HttpClient{ BaseAddress = baseAddress })
 
 
 {% highlight vb %}
-Dim request = TryCast(System.Net.WebRequest.Create("https://app.ticketmaster.eu/mfxapi/v1/categories?lang&domain_id&category_id&subcategories"), System.Net.HttpWebRequest)
+Dim request = TryCast(System.Net.WebRequest.Create("https://app.ticketmaster.eu/mfxapi/v2/categories?lang&domain&category_id&subcategories"), System.Net.HttpWebRequest)
 
 request.Method = "GET"
 
@@ -6174,12 +6174,12 @@ import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
 
 @Grab (group = 'org.codehaus.groovy.modules.http-builder', module = 'http-builder', version = '0.5.0')
-def client = new RESTClient("https://app.ticketmaster.eu/mfxapi/v1")
+def client = new RESTClient("https://app.ticketmaster.eu/mfxapi/v2")
 
 def emptyHeaders = [:]
 emptyHeaders."Accept" = "application/json"
 
-response = client.get( path : "/categories?lang&domain_id&category_id&subcategories", headers: emptyHeaders )
+response = client.get( path : "/categories?lang&domain&category_id&subcategories", headers: emptyHeaders )
 
 println("Status:" + response.status)
 
@@ -6191,7 +6191,7 @@ if (response.data) {
 
 
 {% highlight objc %}
-NSURL *URL = [NSURL URLWithString:@"https://app.ticketmaster.eu/mfxapi/v1/categories?lang&domain_id&category_id&subcategories"];
+NSURL *URL = [NSURL URLWithString:@"https://app.ticketmaster.eu/mfxapi/v2/categories?lang&domain&category_id&subcategories"];
 
 NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
 [request setHTTPMethod:@"GET"];
@@ -6225,7 +6225,7 @@ NSURLSessionDataTask *task = [session dataTaskWithRequest:request
 // import XCPlayground
 // XCPlaygroundPage.currentPage.needsIndefiniteExecution = true
 
-let url = NSURL(string: "https://app.ticketmaster.eu/mfxapi/v1/categories?lang&domain_id&category_id&subcategories")!
+let url = NSURL(string: "https://app.ticketmaster.eu/mfxapi/v2/categories?lang&domain&category_id&subcategories")!
 let request = NSMutableURLRequest(URL: url)
 request.addValue("application/json", forHTTPHeaderField: "Accept")
 
@@ -6248,8 +6248,8 @@ task.resume()
 {: .reqres}
 
 {% highlight HTTP %}
-GET /categories?lang&domain_id&category_id&subcategories HTTP/1.1
-Host: https://app.ticketmaster.eu/mfxapi/v1
+GET /categories?lang&domain&category_id&subcategories HTTP/1.1
+Host: https://app.ticketmaster.eu/mfxapi/v2
 Accept: application/json
 Content-Length: 0
 {% endhighlight %}
@@ -6357,7 +6357,7 @@ Via: 1.1 vegur
 Get suggested matching event names, venue names, attraction names or city names for a partial string (of a minimum of TWO characters). Results should be ordered or grouped by the type of e.g even, venue, attraction, city.
  
 {: .code.red}
-https://app.ticketmaster.eu/mfxapi/v1/search/suggestions
+https://app.ticketmaster.eu/mfxapi/v2/search/suggestions
 
 | Parameters | Optional values | Type | Required |
 | ---------- | --------------- | ---- | -------- |
@@ -6365,9 +6365,9 @@ https://app.ticketmaster.eu/mfxapi/v1/search/suggestions
 |`sort_by` | The sorting method for search results for each type like popularity, name, etc. Example: popularity. | string | No |
 |`lang` | The language code, as the search language is dependent. Example: en-us. | string | No |
 |`order` | The order of the results whether descending or ascending. Example: desc. | string | No |
-|`domain_id` | A unique identifer for the domain or market. Example: canada. | string | No |
+|`domain` | A unique identifer for the domain or market. Example: canada. | string | No |
 |`exclude_types` | Types to be excluded from the search like cities, events or venues etc. Example: cities. | String | No |
-|`include_external_events` | If true return results for external events (i.e Partner sites). Example: true. | boolean | No |
+|`exclude_external` | If true excludes results for external events (i.e Partner sites). Example: true. | boolean | No |
 |`include_packages` | If false, returns events of event type only. If true, returns events of type event OR package. By default, both events and packages are returned e.g. if this parameter is not sent. (default value for param = "true"). Example: true. | boolean | No |
 
 {: .aside}
@@ -6390,7 +6390,7 @@ https://app.ticketmaster.eu/mfxapi/v1/search/suggestions
 {% highlight js %}
 var request = new XMLHttpRequest();
 
-request.open('GET', '/search/suggestions?domain_ids&query&sort_by&lang&include_external_events&include_packages');
+request.open('GET', '/search/suggestions?domain&query&sort_by&lang&include_packages');
 
 request.setRequestHeader('Accept', 'application/json');
 
@@ -6408,7 +6408,7 @@ request.send();
 {% highlight bash %}
 curl --include \
      --header "Accept: application/json" \
-  '/search/suggestions?domain_ids=canada&query=montreal&sort_by=popularity&lang=en-us&include_external_events=true&include_packages=false'
+  '/search/suggestions?domain&query&sort_by&lang&include_packages'
 {% endhighlight %}
 
 
@@ -6432,7 +6432,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType;
 
 Client client = ClientBuilder.newClient();
-Response response = client.target("https://app.ticketmaster.eu/mfxapi/v1/search/suggestions?domain_ids&#38;query&#38;sort_by&#38;lang&#38;include_external_events&#38;include_packages")
+Response response = client.target("https://app.ticketmaster.eu/mfxapi/v2/search/suggestions?domain&query&sort_by&lang&include_packages")
   .request(MediaType.TEXT_PLAIN_TYPE)
   .header("Accept", "application/json")
   .get();
@@ -6448,7 +6448,7 @@ var request = require('request');
 
 request({
   method: 'GET',
-  url: 'https://app.ticketmaster.eu/mfxapi/v1/search/suggestions?domain_ids&query&sort_by&lang&include_external_events&include_packages',
+  url: 'https://app.ticketmaster.eu/mfxapi/v2/search/suggestions?domain&query&sort_by&lang&include_packages',
   headers: {
     'Accept': 'application/json'
   }}, function (error, response, body) {
@@ -6466,7 +6466,7 @@ my $ua   = LWP::UserAgent->new;
 
 $ua->default_header("Accept" => "application/json");
 
-my $response = $ua->get("https://app.ticketmaster.eu/mfxapi/v1/search/suggestions?domain_ids&query&sort_by&lang&include_external_events&include_packages");
+my $response = $ua->get("https://app.ticketmaster.eu/mfxapi/v2/search/suggestions?domain&query&sort_by&lang&include_packages");
 
 print $response->as_string;
 {% endhighlight %}
@@ -6477,7 +6477,7 @@ from urllib2 import Request, urlopen
 headers = {
   'Accept': 'application/json'
 }
-request = Request('https://app.ticketmaster.eu/mfxapi/v1/search/suggestions?domain_ids&query&sort_by&lang&include_external_events&include_packages', headers=headers)
+request = Request('https://app.ticketmaster.eu/mfxapi/v2/search/suggestions?domain&query&sort_by&lang&include_packages', headers=headers)
 
 response_body = urlopen(request).read()
 print response_body
@@ -6487,7 +6487,7 @@ print response_body
 <?php
 $ch = curl_init();
 
-curl_setopt($ch, CURLOPT_URL, "https://app.ticketmaster.eu/mfxapi/v1/search/suggestions?domain_ids&query&sort_by&lang&include_external_events&include_packages");
+curl_setopt($ch, CURLOPT_URL, "https://app.ticketmaster.eu/mfxapi/v2/search/suggestions?domain&query&sort_by&lang&include_packages");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 curl_setopt($ch, CURLOPT_HEADER, FALSE);
 
@@ -6510,7 +6510,7 @@ headers = {
   :accept => 'application/json'
 }
 
-response = RestClient.get 'https://app.ticketmaster.eu/mfxapi/v1/search/suggestions?domain_ids&query&sort_by&lang&include_external_events&include_packages', headers
+response = RestClient.get 'https://app.ticketmaster.eu/mfxapi/v2/search/suggestions?domain&query&sort_by&lang&include_packages', headers
 puts response
 {% endhighlight %}
 
@@ -6527,7 +6527,7 @@ import (
 func main() {
 	client := &http.Client{}
 
-	req, _ := http.NewRequest("GET", "https://app.ticketmaster.eu/mfxapi/v1/search/suggestions?domain_ids&query&sort_by&lang&include_external_events&include_packages", nil)
+	req, _ := http.NewRequest("GET", "https://app.ticketmaster.eu/mfxapi/v2/search/suggestions?domain&query&sort_by&lang&include_packages", nil)
 
 	req.Header.Add("Accept", "application/json")
 
@@ -6555,7 +6555,7 @@ func main() {
 using System;
 using System.Net.Http;
 
-var baseAddress = new Uri("https://app.ticketmaster.eu/mfxapi/v1/");
+var baseAddress = new Uri("https://app.ticketmaster.eu/mfxapi/v2/");
 
 using (var httpClient = new HttpClient{ BaseAddress = baseAddress })
 {
@@ -6572,7 +6572,7 @@ using (var httpClient = new HttpClient{ BaseAddress = baseAddress })
 
 
 {% highlight vb %}
-Dim request = TryCast(System.Net.WebRequest.Create("https://app.ticketmaster.eu/mfxapi/search/suggestions?domain_ids&query&sort_by&lang&include_external_events&include_packages"), System.Net.HttpWebRequest)
+Dim request = TryCast(System.Net.WebRequest.Create("https://app.ticketmaster.eu/mfxapi/v2/search/suggestions?domain&query&sort_by&lang&include_packages"), System.Net.HttpWebRequest)
 
 request.Method = "GET"
 
@@ -6595,12 +6595,12 @@ import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
 
 @Grab (group = 'org.codehaus.groovy.modules.http-builder', module = 'http-builder', version = '0.5.0')
-def client = new RESTClient("https://app.ticketmaster.eu/mfxapi/v1")
+def client = new RESTClient("https://app.ticketmaster.eu/mfxapi/v2")
 
 def emptyHeaders = [:]
 emptyHeaders."Accept" = "application/json"
 
-response = client.get( path : "/search/suggestions?domain_ids&query&sort_by&lang&include_external_events&include_packages", headers: emptyHeaders )
+response = client.get( path : "/search/suggestions?domain&query&sort_by&lang&include_packages", headers: emptyHeaders )
 
 println("Status:" + response.status)
 
@@ -6612,7 +6612,7 @@ if (response.data) {
 
 
 {% highlight objc %}
-NSURL *URL = [NSURL URLWithString:@"https://app.ticketmaster.eu/mfxapi/v1/search/suggestions?domain_ids&query&sort_by&lang&include_external_events&include_packages"];
+NSURL *URL = [NSURL URLWithString:@"https://app.ticketmaster.eu/mfxapi/v2/search/suggestions?domain&query&sort_by&lang&include_packages"];
 
 NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
 [request setHTTPMethod:@"GET"];
@@ -6646,7 +6646,7 @@ NSURLSessionDataTask *task = [session dataTaskWithRequest:request
 // import XCPlayground
 // XCPlaygroundPage.currentPage.needsIndefiniteExecution = true
 
-let url = NSURL(string: "https://app.ticketmaster.eu/mfxapi/v1/search/suggestions?domain_ids&query&sort_by&lang&include_external_events&include_packages")!
+let url = NSURL(string: "https://app.ticketmaster.eu/mfxapi/v2/search/suggestions?domain&query&sort_by&lang&include_packages")!
 let request = NSMutableURLRequest(URL: url)
 request.addValue("application/json", forHTTPHeaderField: "Accept")
 
@@ -6669,8 +6669,8 @@ task.resume()
 {: .reqres}
 
 {% highlight HTTP %}
-GET /search/suggestions?domain_ids&query&sort_by&lang&include_external_events&include_packages HTTP/1.1
-Host: https://app.ticketmaster.eu/mfxapi/v1
+GET /search/suggestions?domain&query&sort_by&lang&include_packages HTTP/1.1
+Host: https://app.ticketmaster.eu/mfxapi/v2
 Accept: application/json
 Content-Length: 0
 {% endhighlight %}
@@ -6694,8 +6694,11 @@ Via: 1.1 vegur
     {
       "name": "Groovy Aardvark - Francofolies de Montreal",
       "id": "10005039CD7042A6",
-      "localeventdate": "2017-02-18T20:00:00Z",
-            "eventdate": {
+      "local_event_date": {
+                "format": "datetime",
+                "value": "2017-02-18T01:00:00Z"
+            },
+            "event_date": {
                 "format": "datetime",
                 "value": "2017-02-19T01:00:00Z"
             }
@@ -6710,8 +6713,11 @@ Via: 1.1 vegur
     {
       "name": "Jacques Kuba Séguin - Festival international de Jazz de Montreal",
       "id": "10005056DD1C51E4",
-      "localeventdate": "2017-02-18T20:00:00Z",
-            "eventdate": {
+      "local_event_date": {
+                "format": "datetime",
+                "value": "2017-02-18T01:00:00Z"
+            },
+            "event_date": {
                 "format": "datetime",
                 "value": "2017-02-19T01:00:00Z"
             }
@@ -6726,8 +6732,11 @@ Via: 1.1 vegur
     {
       "name": "Jean Paray - De Las Vegas à Montreal avec Maurice Paquin",
       "id": "10004F8893B923B8",
-       "localeventdate": "2017-02-18T20:00:00Z",
-            "eventdate": {
+       "local_event_date": {
+                "format": "datetime",
+                "value": "2017-02-18T01:00:00Z"
+            },
+            "event_date": {
                 "format": "datetime",
                 "value": "2017-02-19T01:00:00Z"
             }
