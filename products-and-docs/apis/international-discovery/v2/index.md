@@ -1062,7 +1062,7 @@ https://app.ticketmaster.eu/mfxapi/v2/events/{event_id}/prices
 | ---------- | --------------- | ---- | -------- |
 |`event_id` | A unique identifier for the event which is specific to the domain. Example: 449621. | Integer | Yes|
 |`lang` | The language in ISO code format. Example: no-no. | string | No |
-|`domain` | The unique identifier for the domain or market. Example: norway. | string | No |
+|`domain` | The unique identifier for the domain or market. Example: norway. | string | Yes |
 |`price_level_ids` | The unique identifier for the price level. If no price level ID is specified, all applicable price levels for the event are returned. Example: 1,2. | string | No |
 
 {: .aside}
@@ -1462,7 +1462,7 @@ https://app.ticketmaster.eu/mfxapi/v2/events/{event_id}/seatmap
 | Parameters | Optional values | Type | Required |
 | ---------- | --------------- | ---- | -------- |
 |`event_id` | A unique identifier for the event which is specific to the domain. Example: 449621. | Integer | Yes|
-|`domain` | The unique identifier for the domain or market. Although optional, this is recommended. Example: norway. | string | No |
+|`domain` | The unique identifier for the domain or market. Although optional, this is recommended. Example: norway. | string | Yes |
 
 
 {: .aside}
@@ -1805,7 +1805,7 @@ https://app.ticketmaster.eu/mfxapi/v2/events/{event_id}/areas
 | Parameters | Optional values | Type | Required |
 | ---------- | --------------- | ---- | -------- |
 |`event_id` | A unique identifier for the event which is specific to the domain. Example: 449621. | Integer | Yes|
-|`domain` | The unique identifier for the domain or market. Although optional, this is recommended. Example: norway. | string | No |
+|`domain` | The unique identifier for the domain or market. Although optional, this is recommended. Example: norway. | string | Yes |
 |`lang` | The language in ISO code format. Example: no-no. | string | No |
 
 {: .aside}
